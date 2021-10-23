@@ -21,14 +21,14 @@ security:
     registration:
       pattern: ^/api/users
       stateless: true
-      anonymous: true
+      #   anonymous: true
       # Allow only POST method to avoid the avaibility to get all users
       methods: [POST]
 
     login:
       pattern: ^/api/login
       stateless: true
-      anonymous: true
+      #   anonymous: true
       json_login:
         check_path: /api/login_check
         success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -41,7 +41,7 @@ security:
         authenticators:
           - lexik_jwt_authentication.jwt_token_authenticator
             # Parce que anonymous est activé, il faut resécuriser tous les accès avec l'option access_control
-      anonymous: true
+    #   anonymous: true
     main:
       lazy: true
       provider: app_user_provider
@@ -55,7 +55,7 @@ security:
   access_control:
     - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/api/customers, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/api/invoices, roles:IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/invoices, roles: IS_AUTHENTICATED_FULLY }
     - {
         path: ^/api/users,
         roles: IS_AUTHENTICATED_FULLY,
