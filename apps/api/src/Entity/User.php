@@ -38,8 +38,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'PATCH' => [
             "path" => "/v1/users/{id}"
         ],
+    ],
+    normalizationContext: [
+        'groups' => ["users:normalization:read"]
+    ],
+    // denormalizationContext: ['groups' => ['write']],
+    attributes: [
+        'order' => ["id" => "DESC"], //ASC
     ]
 )]
+
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -48,7 +57,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="integer")
      */
     #[Groups([
-        "custumer:normalization:read"
+        "custumer:normalization:read",
+        "users:normalization:read"
     ])]
     private $id;
 
@@ -56,7 +66,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      */
     #[Groups([
-        "custumer:normalization:read"
+        "custumer:normalization:read",
+        "users:normalization:read"
+
     ])]
     private $email;
 
@@ -76,7 +88,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[Groups([
         "custumer:normalization:read",
-        "invoice:normalization:read"
+        "invoice:normalization:read",
+        "users:normalization:read"
+
 
     ])]
     private $firstName;
@@ -86,7 +100,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[Groups([
         "custumer:normalization:read",
-        "invoice:normalization:read"
+        "invoice:normalization:read",
+        "users:normalization:read"
 
     ])]
     private $lastName;
