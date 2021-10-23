@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\DataProvider\Pagination;
 use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +12,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  */
+
+#[ApiResource(
+    attributes: [
+        'pagination_enabled' => true,
+        'pagination_items_per_page' => 1
+    ]
+)]
+
 class Customer
 {
     /**

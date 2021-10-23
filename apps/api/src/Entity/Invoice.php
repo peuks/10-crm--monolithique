@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  */
+#[ApiResource()]
 class Invoice
 {
     /**
@@ -60,12 +62,12 @@ class Invoice
         return $this;
     }
 
-    public function getSentAt(): ?\DateTimeImmutable
+    public function getSentAt(): ?\DateTime
     {
         return $this->sentAt;
     }
 
-    public function setSentAt(\DateTimeImmutable $sentAt): self
+    public function setSentAt(\DateTime $sentAt): self
     {
         $this->sentAt = $sentAt;
 
