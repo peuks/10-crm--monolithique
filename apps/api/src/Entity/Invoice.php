@@ -37,11 +37,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
             "path" => "/v1/invoices/{id}"
         ],
     ],
+
     normalizationContext: [
         'groups' => ['invoice:normalization:read']
     ],
 
     // denormalizationContext: ['groups' => ['write']],
+    subresourceOperations: [
+        'api_customers_invoices_get_subresource' => [
+            'method' => 'GET',
+            'normalization_context' => [
+                'groups' => ['invoice:subresource:normalization:read'],
+            ],
+
+
+        ],
+    ],
     attributes: [
         'order' => ["sentAt" => "DESC"], //ASC
     ]
@@ -62,7 +73,8 @@ class Invoice
      */
     #[Groups([
         "invoice:normalization:read",
-        "custumer:normalization:read"
+        "custumer:normalization:read",
+        "invoice:subresource:normalization:read"
     ])]
     private $id;
 
@@ -71,7 +83,9 @@ class Invoice
      */
     #[Groups([
         "invoice:normalization:read",
-        "custumer:normalization:read"
+        "custumer:normalization:read",
+        "invoice:subresource:normalization:read"
+
     ])]
     private $amount;
 
@@ -80,7 +94,9 @@ class Invoice
      */
     #[Groups([
         "invoice:normalization:read",
-        "custumer:normalization:read"
+        "custumer:normalization:read",
+        "invoice:subresource:normalization:read"
+
     ])]
     private $sentAt;
 
@@ -89,7 +105,9 @@ class Invoice
      */
     #[Groups([
         "invoice:normalization:read",
-        "custumer:normalization:read"
+        "custumer:normalization:read",
+        "invoice:subresource:normalization:read"
+
     ])]
     private $status;
 
@@ -107,7 +125,9 @@ class Invoice
      */
     #[Groups([
         "invoice:normalization:read",
-        "custumer:normalization:read"
+        "custumer:normalization:read",
+        "invoice:subresource:normalization:read"
+
     ])]
     private $chrono;
 
@@ -182,6 +202,8 @@ class Invoice
 
     #[Groups([
         "invoice:normalization:read",
+        "invoice:subresource:normalization:read"
+
     ])]
     public function getUser(): User
     {
