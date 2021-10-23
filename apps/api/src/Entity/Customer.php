@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -93,35 +94,65 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-            "invoice:normalization:read"
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+                "invoice:normalization:read"
+            ]
+        ),
+        Assert\NotBlank(
+            message: "Le prénom du client est obligatoire"
+        ),
+        Assert\Length(
+            min: 3,
+            minMessage: "Le prénom doit faire plus de {{ limit }} caractères",
+            max: 50,
+            maxMessage: "Le prénom doit contenir moins de {{ limit }} caractères"
+        )
+    ]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-            "invoice:normalization:read"
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+                "invoice:normalization:read"
+            ]
+        ),
+        Assert\NotBlank(
+            message: "Le nom de famille du client est obligatoire"
+        ),
+        Assert\Length(
+            min: 3,
+            minMessage: "Le nom de famille doit faire plus de {{ limit }} caractères",
+            max: 50,
+            maxMessage: "Le nom de famille doit contenir moins de {{ limit }} caractères"
+        )
+    ]
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * 
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-            "invoice:normalization:read"
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+                "invoice:normalization:read"
+            ]
+        ),
+        Assert\NotBlank(
+            message: "L'adresse email du customer est obligatoire"
+        ),
+        Assert\Email(
+            message: "Le format de l'adresse email est incorrecte"
+        )
+    ]
     private $email;
 
     /**
@@ -151,11 +182,16 @@ class Customer
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+            ]
+        ),
+        Assert\NotBlank(
+            message: "L'utilisateur est obligatoire"
+        ),
+    ]
     private $user;
 
     public function __construct()

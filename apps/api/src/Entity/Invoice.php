@@ -8,6 +8,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
@@ -27,6 +28,33 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'GET' => [
             "path" => "/v1/invoices/{id}"
         ],
+        'Increment' => [
+            "method" => "POST",
+            "path" => "/v1/invoices/{id}/increment",
+            "controller" => "App\Controller\InvoiceIncrementationController",
+            'openapi_context' => [
+                'summary'     => "Increment invoice's chrono by +1",
+                // 'description' => "# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)",
+                'description' => "This controller with Increment by once a invoice's chrono",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                [
+                                    'yoooo'        => ['type' => 'string'],
+                                    'description' => ['type' => 'string'],
+                                ],
+                            ],
+                            'example' => [
+                                "Send an empty body"
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
         'PUT' => [
             "path" => "/v1/invoices/{id}"
         ],
@@ -42,7 +70,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'groups' => ['invoice:normalization:read']
     ],
 
-    // denormalizationContext: ['groups' => ['write']],
+    denormalizationContext: [
+        "disable_type_enforcement" => true
+    ],
     subresourceOperations: [
         'api_customers_invoices_get_subresource' => [
             'method' => 'GET',
@@ -81,54 +111,94 @@ class Invoice
     /**
      * @ORM\Column(type="float")
      */
-    #[Groups([
-        "invoice:normalization:read",
-        "custumer:normalization:read",
-        "invoice:subresource:normalization:read"
+    #[
+        Groups([
+            "invoice:normalization:read",
+            "custumer:normalization:read",
+            "invoice:subresource:normalization:read"
 
-    ])]
+        ]),
+        Assert\NotBlank(
+            message: "Le montant de la facture est obligatoire"
+        ),
+        Assert\Type(
+            type: "numeric",
+            message: "Le montant doit être numérique."
+        )
+    ]
     private $amount;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    #[Groups([
-        "invoice:normalization:read",
-        "custumer:normalization:read",
-        "invoice:subresource:normalization:read"
+    #[
+        Groups([
+            "invoice:normalization:read",
+            "custumer:normalization:read",
+            "invoice:subresource:normalization:read"
 
-    ])]
+        ]),
+        Assert\Type(
+            type: "\DateTime",
+            message: "La date doir être au format YYYY-MM-DD"
+        ),
+        Assert\NotBlank(
+            message: "La date doit être renseignée"
+        )
+    ]
     private $sentAt;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups([
-        "invoice:normalization:read",
-        "custumer:normalization:read",
-        "invoice:subresource:normalization:read"
+    #[
+        Groups([
+            "invoice:normalization:read",
+            "custumer:normalization:read",
+            "invoice:subresource:normalization:read"
 
-    ])]
+        ]),
+        Assert\NotBlank(message: "Le status de la facture est obligatoire"),
+        Assert\Choice(
+            ['SEND', 'PAID', 'CANCELLED'],
+            message: "Les choix possibles sont SEND, PAID ou CANCELLED"
+        )
+    ]
+
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups([
-        "invoice:normalization:read",
-    ])]
+    #[
+        Groups([
+            "invoice:normalization:read",
+        ]),
+        Assert\NotBlank(
+            message: "Veuillez renseigner un customer pour cette facture"
+        )
+    ]
     private $customer;
 
     /**
      * @ORM\Column(type="integer")
      */
-    #[Groups([
-        "invoice:normalization:read",
-        "custumer:normalization:read",
-        "invoice:subresource:normalization:read"
+    #[
+        Groups([
+            "invoice:normalization:read",
+            "custumer:normalization:read",
+            "invoice:subresource:normalization:read"
 
-    ])]
+        ]),
+        Assert\NotBlank(
+            message: "Il faut définir un chrono"
+        ),
+        Assert\Type(
+            type: "integer",
+            message: "Le chrono doit être un nombre !"
+        )
+    ]
     private $chrono;
 
     public function getId(): ?int
