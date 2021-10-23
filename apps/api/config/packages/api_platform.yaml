@@ -11,7 +11,7 @@ api_platform:
     # The name of the query parameter to filter nullable results (with the ExistsFilter).
     # exists_parameter_name: "exists"
 
-    # The default order of results.
+    # The default order of results. ASC or DSC
     order: "ASC"
 
     # The name of the query parameter to order results (with the OrderFilter).

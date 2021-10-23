@@ -2,14 +2,27 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  */
-#[ApiResource()]
+#[ApiResource(
+    attributes: [
+        'order' => ["sentAt" => "DESC"], //ASC
+    ]
+)]
+#[
+    ApiFilter(
+        OrderFilter::class,
+        properties: ['id', 'amount', 'chrono'],
+        arguments: ['orderParameterName' => 'order']
+    )
+]
 class Invoice
 {
     /**

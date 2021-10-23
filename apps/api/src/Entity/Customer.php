@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\DataProvider\Pagination;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,10 +18,24 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     attributes: [
         'pagination_enabled' => true,
-        'pagination_items_per_page' => 1
+        'pagination_items_per_page' => 10
     ]
 )]
-
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'firstName' => 'partial',
+        'lastName' => 'partial',
+        'company' => 'partial'
+    ]
+)]
+#[
+    ApiFilter(
+        OrderFilter::class,
+        // properties: ['id', 'amount', 'chrono'],
+        // arguments: ['orderParameterName' => 'order']
+    )
+]
 class Customer
 {
     /**
