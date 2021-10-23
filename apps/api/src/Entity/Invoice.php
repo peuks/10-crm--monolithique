@@ -40,6 +40,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: [
         'groups' => ['invoice:normalization:read']
     ],
+
     // denormalizationContext: ['groups' => ['write']],
     attributes: [
         'order' => ["sentAt" => "DESC"], //ASC

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\CustomerRepository;
@@ -20,30 +21,39 @@ use Symfony\Component\Serializer\Annotation\Groups;
     // GET , POST
     collectionOperations: [
         'GET' => [
-            'path' => "/v1/clients/"
+            'path' => "/v1/customers/"
         ],
         'POST' => [
-            'path' => "/v1/clients/"
+            'path' => "/v1/customers/"
         ],
     ],
     // GET , PUT, DELETE, PATCH
     itemOperations: [
         'GET' => [
-            "path" => "/v1/clients/{id}"
+            "path" => "/v1/customers/{id}"
         ],
         'PUT' => [
-            "path" => "/v1/clients/{id}"
+            "path" => "/v1/customers/{id}"
         ],
         'DELETE' => [
-            "path" => "/v1/clients/{id}"
+            "path" => "/v1/customers/{id}"
         ],
         'PATCH' => [
-            "path" => "/v1/clients/{id}"
+            "path" => "/v1/customers/{id}"
+        ],
+    ],
+    subresourceOperations: [
+        'invoices_get_subresource' => [
+            'method' => 'GET',
+            'path' => '/v1/customers/{id}/invoices',
+            // 'security' => "is_granted('ROLE_AUTHENTICATED')",
+
         ],
     ],
     normalizationContext: [
         'groups' => ['custumer:normalization:read']
     ],
+
     // denormalizationContext: ['groups' => ['write']],
     attributes: [
         'pagination_enabled' => true,
@@ -128,11 +138,14 @@ class Customer
     /**
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer")
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+            ]
+        ),
+        ApiSubresource()
+    ]
     private $invoices;
 
     /**
