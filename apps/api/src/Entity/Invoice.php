@@ -7,11 +7,16 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  */
 #[ApiResource(
+    normalizationContext: [
+        'groups' => ['invoice:normalization:read']
+    ],
+    // denormalizationContext: ['groups' => ['write']],
     attributes: [
         'order' => ["sentAt" => "DESC"], //ASC
     ]
@@ -30,32 +35,55 @@ class Invoice
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups([
+        "invoice:normalization:read",
+        "custumer:normalization:read"
+    ])]
     private $id;
 
     /**
      * @ORM\Column(type="float")
      */
+    #[Groups([
+        "invoice:normalization:read",
+        "custumer:normalization:read"
+    ])]
     private $amount;
 
     /**
      * @ORM\Column(type="datetime")
      */
+    #[Groups([
+        "invoice:normalization:read",
+        "custumer:normalization:read"
+    ])]
     private $sentAt;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups([
+        "invoice:normalization:read",
+        "custumer:normalization:read"
+    ])]
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
      */
+    #[Groups([
+        "invoice:normalization:read",
+    ])]
     private $customer;
 
     /**
      * @ORM\Column(type="integer")
      */
+    #[Groups([
+        "invoice:normalization:read",
+        "custumer:normalization:read"
+    ])]
     private $chrono;
 
     public function getId(): ?int
@@ -121,5 +149,17 @@ class Invoice
         $this->chrono = $chrono;
 
         return $this;
+    }
+    /**
+     * Permet fde récupérer le User à qui apaprtient la facture
+     * @return User|null
+     */
+
+    #[Groups([
+        "invoice:normalization:read",
+    ])]
+    public function getUser(): User
+    {
+        return $this->customer->getUser();
     }
 }

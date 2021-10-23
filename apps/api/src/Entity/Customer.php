@@ -10,12 +10,17 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  */
 
 #[ApiResource(
+    normalizationContext: [
+        'groups' => ['custumer:normalization:read']
+    ],
+    // denormalizationContext: ['groups' => ['write']],
     attributes: [
         'pagination_enabled' => true,
         'pagination_items_per_page' => 10
@@ -43,36 +48,77 @@ class Customer
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(
+        [
+            "custumer:normalization:read",
+            "invoice:normalization:read"
+        ]
+    )]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(
+        [
+            "custumer:normalization:read",
+            "invoice:normalization:read"
+        ]
+    )]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(
+        [
+            "custumer:normalization:read",
+            "invoice:normalization:read"
+        ]
+    )]
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
      */
+    #[Groups(
+        [
+            "custumer:normalization:read",
+            "invoice:normalization:read"
+        ]
+    )]
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(
+        [
+            "custumer:normalization:read",
+            "invoice:normalization:read"
+        ]
+    )]
     private $company;
 
     /**
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer")
      */
+    #[Groups(
+        [
+            "custumer:normalization:read",
+        ]
+    )]
     private $invoices;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      */
+    #[Groups(
+        [
+            "custumer:normalization:read",
+        ]
+    )]
     private $user;
 
     public function __construct()
@@ -149,6 +195,46 @@ class Customer
         }
 
         return $this;
+    }
+
+    /**
+     * Get total invoices
+     * @return float
+     */
+    #[Groups(
+        [
+            "custumer:normalization:read",
+        ]
+    )]
+    public function getTotalAmount(): float
+    {
+        return array_reduce(
+            $this->invoices->toArray(),
+
+            function ($total, $invoice) {
+                return $total + $invoice->getAmount();
+            },
+            0
+        );
+    }
+
+    /**
+     * Return the total amount of unpaid invoices
+     * @return float
+     */
+    #[Groups(
+        [
+            "custumer:normalization:read",
+        ]
+    )]
+    public function getTotalUnpaid(): float
+    {
+        // Transform arraycollection to array
+        return array_reduce($this->invoices->toArray(), function ($total, $invoce) {
+            // Get total of invoices unpaid
+            return $total +
+                ($invoce->getStatus() === "PAID" || $invoce->getStatus() === "CANCELLED") ? 0 : $invoce->getAmount();
+        }, 0);
     }
 
     public function removeInvoice(Invoice $invoice): self
