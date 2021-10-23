@@ -14,7 +14,32 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-#[ApiResource()]
+#[ApiResource(
+    // GET , POST
+    collectionOperations: [
+        'GET' => [
+            'path' => "/v1/users/"
+        ],
+        'POST' => [
+            'path' => "/v1/users/"
+        ],
+    ],
+    // GET , PUT, DELETE, PATCH
+    itemOperations: [
+        'GET' => [
+            "path" => "/v1/users/{id}"
+        ],
+        'PUT' => [
+            "path" => "/v1/users/{id}"
+        ],
+        'DELETE' => [
+            "path" => "/v1/users/{id}"
+        ],
+        'PATCH' => [
+            "path" => "/v1/users/{id}"
+        ],
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**

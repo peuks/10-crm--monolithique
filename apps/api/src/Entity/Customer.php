@@ -17,6 +17,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 
 #[ApiResource(
+    // GET , POST
+    collectionOperations: [
+        'GET' => [
+            'path' => "/v1/clients/"
+        ],
+        'POST' => [
+            'path' => "/v1/clients/"
+        ],
+    ],
+    // GET , PUT, DELETE, PATCH
+    itemOperations: [
+        'GET' => [
+            "path" => "/v1/clients/{id}"
+        ],
+        'PUT' => [
+            "path" => "/v1/clients/{id}"
+        ],
+        'DELETE' => [
+            "path" => "/v1/clients/{id}"
+        ],
+        'PATCH' => [
+            "path" => "/v1/clients/{id}"
+        ],
+    ],
     normalizationContext: [
         'groups' => ['custumer:normalization:read']
     ],

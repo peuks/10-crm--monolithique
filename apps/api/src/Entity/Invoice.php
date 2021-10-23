@@ -13,6 +13,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  */
 #[ApiResource(
+    // GET , POST
+    collectionOperations: [
+        'GET' => [
+            'path' => "/v1/invoices/"
+        ],
+        'POST' => [
+            'path' => "/v1/invoices/"
+        ],
+    ],
+    // GET , PUT, DELETE, PATCH
+    itemOperations: [
+        'GET' => [
+            "path" => "/v1/invoices/{id}"
+        ],
+        'PUT' => [
+            "path" => "/v1/invoices/{id}"
+        ],
+        'DELETE' => [
+            "path" => "/v1/invoices/{id}"
+        ],
+        'PATCH' => [
+            "path" => "/v1/invoices/{id}"
+        ],
+    ],
     normalizationContext: [
         'groups' => ['invoice:normalization:read']
     ],
