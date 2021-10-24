@@ -20,6 +20,13 @@ services:
       - "../src/Entity/"
       - "../src/Kernel.php"
       - "../src/Tests/"
+  App\Events\JwtCreatedSubscriber:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: lexik_jwt_authentication.on_jwt_created,
+          method: updateJwtData,
+        }
   App\Controller\InvoiceIncrementationController:
     public: true
     # tags: ["controller.service_arguments"]

@@ -8,8 +8,10 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 class JwtCreatedSubscriber
 {
     /**
+     * * Work only if enabled in services.yaml *
      * La fonction est appellé automatiquement lors d'un évènement de création de token 
      * pour nous permettre sa modification ou non
+     * 
      */
     public function updateJwtData(JWTCreatedEvent $event)
     {
@@ -35,9 +37,14 @@ class JwtCreatedSubscriber
 
         $data = $event->getData();
 
+        /******************************
+         * AS MANY DATA AS I WANT *
+         ******************************/
         $data['firstName'] = $user->getFirstName();
         $data['lastName'] = $user->getLastName();
+        // $data['thekey'] = "the Value";
 
         $event->setData($data);
+        dd($event);
     }
 }
