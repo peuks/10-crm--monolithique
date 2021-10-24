@@ -41,7 +41,11 @@ use Symfony\Component\Validator\Constraints as Assert;
             'PATCH' => [
                 "path" => "/v1/users/{id}"
             ],
-        ]
+        ],
+        normalizationContext: [
+            'groups' => ['users:normalization:read']
+        ],
+
     ),
     UniqueEntity(
         'email',
@@ -67,7 +71,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[
         Groups([
-            "custumer:normalization:read"
+            "custumer:normalization:read",
+            "users:normalization:read"
         ]),
 
         Assert\NotBlank(message: "L'email est obligatoire"),
@@ -97,7 +102,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[
         Groups([
             "custumer:normalization:read",
-            "invoice:normalization:read"
+            "invoice:normalization:read",
+            "users:normalization:read"
+
 
         ]),
         Assert\NotBlank(message: "Le prénom est obligatoire"),
@@ -116,7 +123,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[
         Groups([
             "custumer:normalization:read",
-            "invoice:normalization:read"
+            "invoice:normalization:read",
+            "users:normalization:read"
+
 
         ]),
         Assert\Length(

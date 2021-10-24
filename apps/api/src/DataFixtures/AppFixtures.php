@@ -38,6 +38,15 @@ class AppFixtures extends Fixture
 
         // Persist Admin
         $manager->persist($admin);
+
+        $user = new User();
+        $user->setEmail("test@test.com")
+            ->setFirstName("test")
+            ->setLastName("test")
+            ->setPassword($this->passwordHasher->hashPassword($admin, 'password'));
+
+        // Persist Admin
+        $manager->persist($user);
         /**
          * Création des Users
          */
