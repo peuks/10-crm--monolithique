@@ -45,6 +45,5 @@ class JwtCreatedSubscriber
         // $data['thekey'] = "the Value";
 
         $event->setData($data);
-        dd($event);
     }
 }
