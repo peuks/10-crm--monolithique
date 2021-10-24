@@ -36,12 +36,9 @@ security:
 
     api:
       pattern: ^/api
-      stateless: true
-      guard:
-        authenticators:
-          - lexik_jwt_authentication.jwt_token_authenticator
-            # Parce que anonymous est activé, il faut resécuriser tous les accès avec l'option access_control
-    #   anonymous: true
+      jwt: ~
+      # stateless: true
+
     main:
       lazy: true
       provider: app_user_provider

@@ -22,6 +22,9 @@ services:
       - "../src/Tests/"
   App\Controller\InvoiceIncrementationController:
     public: true
+    # tags: ["controller.service_arguments"]
+    # App\Controller\InvoiceController:
+    #   public: true
     tags: ["controller.service_arguments"]
   App\Serializer\PatchedDataTimeNormalizer:
     tags: [serializer.normalizer]

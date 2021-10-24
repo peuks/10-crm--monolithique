@@ -28,33 +28,33 @@ use Symfony\Component\Validator\Constraints as Assert;
         'GET' => [
             "path" => "/v1/invoices/{id}"
         ],
-        'Increment' => [
-            "method" => "POST",
-            "path" => "/v1/invoices/{id}/increment",
-            "controller" => "App\Controller\InvoiceIncrementationController",
-            'openapi_context' => [
-                'summary'     => "Increment invoice's chrono by +1",
-                // 'description' => "# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)",
-                'description' => "This controller with Increment by once a invoice's chrono",
-                'requestBody' => [
-                    'content' => [
-                        'application/json' => [
-                            'schema'  => [
-                                'type'       => 'object',
-                                'properties' =>
-                                [
-                                    'yoooo'        => ['type' => 'string'],
-                                    'description' => ['type' => 'string'],
-                                ],
-                            ],
-                            'example' => [
-                                "Send an empty body"
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
+        // 'Increment' => [
+        //     "method" => "POST",
+        //     "path" => "/v1/invoices/{id}/increment",
+        //     "controller" => "App\Controller\InvoiceIncrementationController",
+        //     'openapi_context' => [
+        //         'summary'     => "Increment invoice's chrono by +1",
+        //         // 'description' => "# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)",
+        //         'description' => "This controller with Increment by once a invoice's chrono",
+        //         'requestBody' => [
+        //             'content' => [
+        //                 'application/json' => [
+        //                     'schema'  => [
+        //                         'type'       => 'object',
+        //                         'properties' =>
+        //                         [
+        //                             'yoooo'        => ['type' => 'string'],
+        //                             'description' => ['type' => 'string'],
+        //                         ],
+        //                     ],
+        //                     'example' => [
+        //                         "Send an empty body"
+        //                     ],
+        //                 ],
+        //             ],
+        //         ],
+        //     ],
+        // ],
         'PUT' => [
             "path" => "/v1/invoices/{id}"
         ],

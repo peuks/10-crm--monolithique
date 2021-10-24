@@ -13,7 +13,7 @@ class CheckAndSetDate
      * @return Date|'' 
      *  
      */
-    public function checkAndSet(Invoice $invoice): \DateTime
+    public function checkAndSet(Invoice $invoice): Invoice
     {
         return ($invoice->getSentAt()) ?: $invoice->setSentAt(new \DateTime());
     }
