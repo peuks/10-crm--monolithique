@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\CustomerRepository;
@@ -11,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -20,30 +22,39 @@ use Symfony\Component\Serializer\Annotation\Groups;
     // GET , POST
     collectionOperations: [
         'GET' => [
-            'path' => "/v1/clients/"
+            'path' => "/v1/customers/"
         ],
         'POST' => [
-            'path' => "/v1/clients/"
+            'path' => "/v1/customers/"
         ],
     ],
     // GET , PUT, DELETE, PATCH
     itemOperations: [
         'GET' => [
-            "path" => "/v1/clients/{id}"
+            "path" => "/v1/customers/{id}"
         ],
         'PUT' => [
-            "path" => "/v1/clients/{id}"
+            "path" => "/v1/customers/{id}"
         ],
         'DELETE' => [
-            "path" => "/v1/clients/{id}"
+            "path" => "/v1/customers/{id}"
         ],
         'PATCH' => [
-            "path" => "/v1/clients/{id}"
+            "path" => "/v1/customers/{id}"
+        ],
+    ],
+    subresourceOperations: [
+        'invoices_get_subresource' => [
+            'method' => 'GET',
+            'path' => '/v1/customers/{id}/invoices',
+            // 'security' => "is_granted('ROLE_AUTHENTICATED')",
+
         ],
     ],
     normalizationContext: [
         'groups' => ['custumer:normalization:read']
     ],
+
     // denormalizationContext: ['groups' => ['write']],
     attributes: [
         'pagination_enabled' => true,
@@ -83,35 +94,65 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-            "invoice:normalization:read"
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+                "invoice:normalization:read"
+            ]
+        ),
+        Assert\NotBlank(
+            message: "Le prénom du client est obligatoire"
+        ),
+        Assert\Length(
+            min: 3,
+            minMessage: "Le prénom doit faire plus de {{ limit }} caractères",
+            max: 50,
+            maxMessage: "Le prénom doit contenir moins de {{ limit }} caractères"
+        )
+    ]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-            "invoice:normalization:read"
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+                "invoice:normalization:read"
+            ]
+        ),
+        Assert\NotBlank(
+            message: "Le nom de famille du client est obligatoire"
+        ),
+        Assert\Length(
+            min: 3,
+            minMessage: "Le nom de famille doit faire plus de {{ limit }} caractères",
+            max: 50,
+            maxMessage: "Le nom de famille doit contenir moins de {{ limit }} caractères"
+        )
+    ]
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * 
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-            "invoice:normalization:read"
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+                "invoice:normalization:read"
+            ]
+        ),
+        Assert\NotBlank(
+            message: "L'adresse email du customer est obligatoire"
+        ),
+        Assert\Email(
+            message: "Le format de l'adresse email est incorrecte"
+        )
+    ]
     private $email;
 
     /**
@@ -128,21 +169,29 @@ class Customer
     /**
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer")
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+            ]
+        ),
+        ApiSubresource()
+    ]
     private $invoices;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      */
-    #[Groups(
-        [
-            "custumer:normalization:read",
-        ]
-    )]
+    #[
+        Groups(
+            [
+                "custumer:normalization:read",
+            ]
+        ),
+        Assert\NotBlank(
+            message: "L'utilisateur est obligatoire"
+        ),
+    ]
     private $user;
 
     public function __construct()

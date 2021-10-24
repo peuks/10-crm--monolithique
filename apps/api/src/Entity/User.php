@@ -7,47 +7,47 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-#[ApiResource(
-    // GET , POST
-    collectionOperations: [
-        'GET' => [
-            'path' => "/v1/users/"
+#[
+    ApiResource(
+        // GET , POST
+        collectionOperations: [
+            'GET' => [
+                'path' => "/v1/users/"
+            ],
+            'POST' => [
+                'path' => "/v1/users/"
+            ],
         ],
-        'POST' => [
-            'path' => "/v1/users/"
-        ],
-    ],
-    // GET , PUT, DELETE, PATCH
-    itemOperations: [
-        'GET' => [
-            "path" => "/v1/users/{id}"
-        ],
-        'PUT' => [
-            "path" => "/v1/users/{id}"
-        ],
-        'DELETE' => [
-            "path" => "/v1/users/{id}"
-        ],
-        'PATCH' => [
-            "path" => "/v1/users/{id}"
-        ],
-    ],
-    normalizationContext: [
-        'groups' => ["users:normalization:read"]
-    ],
-    // denormalizationContext: ['groups' => ['write']],
-    attributes: [
-        'order' => ["id" => "DESC"], //ASC
-    ]
-)]
-
+        // GET , PUT, DELETE, PATCH
+        itemOperations: [
+            'GET' => [
+                "path" => "/v1/users/{id}"
+            ],
+            'PUT' => [
+                "path" => "/v1/users/{id}"
+            ],
+            'DELETE' => [
+                "path" => "/v1/users/{id}"
+            ],
+            'PATCH' => [
+                "path" => "/v1/users/{id}"
+            ],
+        ]
+    ),
+    UniqueEntity(
+        'email',
+        message: "l'Email est déjà enrengistré"
+    )
+]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -65,11 +65,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    #[Groups([
-        "custumer:normalization:read",
-        "users:normalization:read"
+    #[
+        Groups([
+            "custumer:normalization:read"
+        ]),
 
-    ])]
+        Assert\NotBlank(message: "L'email est obligatoire"),
+        Assert\Email(message: "Le format de l'adresse email est invalide")
+    ]
     private $email;
 
     /**
@@ -81,29 +84,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
+    #[
+        Assert\NotBlank(
+            message: "Le mot de passe est obligatoire"
+        ),
+    ]
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups([
-        "custumer:normalization:read",
-        "invoice:normalization:read",
-        "users:normalization:read"
+    #[
+        Groups([
+            "custumer:normalization:read",
+            "invoice:normalization:read"
 
-
-    ])]
+        ]),
+        Assert\NotBlank(message: "Le prénom est obligatoire"),
+        Assert\Length(
+            min: 3,
+            minMessage: "Le prenom doit contenir plus de 3 caractères",
+            max: 20,
+            maxMessage: "Le prenom ne peut contenir plus de {{ limit }} caractères",
+        )
+    ]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups([
-        "custumer:normalization:read",
-        "invoice:normalization:read",
-        "users:normalization:read"
+    #[
+        Groups([
+            "custumer:normalization:read",
+            "invoice:normalization:read"
 
-    ])]
+        ]),
+        Assert\Length(
+            min: 3,
+            minMessage: "Le nom de famille doit contenir plus de 3 caractères",
+            max: 20,
+            maxMessage: "Le nom de famille ne peut contenir plus de {{ limit }} caractères",
+        )
+    ]
     private $lastName;
 
     /**
