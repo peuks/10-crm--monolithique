@@ -43,7 +43,7 @@ class AppFixtures extends Fixture
         $user->setEmail("test@test.com")
             ->setFirstName("test")
             ->setLastName("test")
-            ->setPassword($this->passwordHasher->hashPassword($admin, 'password'));
+            ->setPassword($this->passwordHasher->hashPassword($user, 'password'));
 
         // Persist Admin
         $manager->persist($user);
