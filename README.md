@@ -1,15 +1,16 @@
-<h1 align="center">Welcome to Crm ApiPlatForm BackEnd 👋</h1>
+<h1 align="center">Welcome to CRM 3000 BACK END 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.5-blue.svg?cacheSeconds=2592000" />
 </p>
 
-> A refacto of  the original app from lio Chamla by updating sf to 5.3.9 and divide the project in two parts
+> Test Project for Layan
 
 ## Author
 
-👤 **peuks**
+👤 **David VANMAK**
 
+* Website: https://peuks.github.io/
 * GitHub: [@peuks](https://github.com/peuks)
+* LinkedIn: [@davidvanmak](https://linkedin.com/in/davidvanmak)
 
 ## Show your support
 
