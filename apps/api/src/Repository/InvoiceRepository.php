@@ -27,7 +27,6 @@ class InvoiceRepository extends ServiceEntityRepository
      */
     public function findNextChrono(User $user): int
     {
-        // invoice = alias
         return $this->createQueryBuilder("invoice")
             // Selectionner le chrono de l'invoice 
             ->select("invoice.chrono")

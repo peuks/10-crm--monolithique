@@ -60,8 +60,8 @@ class InvoiceChronoIncrement implements EventSubscriberInterface
 
             $user = $this->security->getUser();
 
-            $nextChrono = $this->repository->findNextChrono($user);
-            $invoice->setChrono($nextChrono);
+            // $nextChrono = $this->repository->findNextChrono($user);
+            $invoice->setChrono(1);
             $this->date->checkAndSet($invoice);
         }
     }
